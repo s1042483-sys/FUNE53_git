@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random User Viewer</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: hsl(59, 62%, 84%);
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 20px;
+            word-break: break-all;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: hsl(323, 45%, 74%);
+            color: #f11b1b;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: hsl(323, 45%, 74%);
+        }
+
+        .loading {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div id="userCard">
+            <p class="loading">載入中...</p>
+        </div>
+
+        <div class="buttons">
+            <button id="prevBtn">上一位</button>
+            <button id="nextBtn">下一位</button>
+        </div>
+    </div>
+
+    <script src="sm.js"></script>
+
+</body>
+
+</html>
+
+<!-- randomuser 每次連進去都會隨機一個使用者給你，請整理一個使用者的大頭照、姓名和信箱變成一個物件
+整理至少五個使用者，變成一個陣列
+在頁面一進來，會顯示你整理的第一個使用者的資料
+會有兩個按鈕切換上下一個使用者 -->

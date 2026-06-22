@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        section {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body {
+            background-color: #dde2eb;
+        }
+
+        article {
+            min-width: 400px;
+            min-height: 100px;
+            background-color: #79aaf7;
+            border-radius: 5px;
+            display: block;
+            padding: 10px;
+            font-size: 24px;
+        }
+
+        .container {
+            .row {
+                display: flex;
+                margin-bottom: 2px;
+
+                .col {
+                    width: 100px;
+                    text-align: center;
+                    margin-right: 2px;
+
+                    &:nth-child(1) {
+                        width: 50px;
+                    }
+                }
+
+                &:nth-child(odd) {
+                    .col {
+                        background-color: rgba(255, 255, 255, 0.2);
+                    }
+                }
+
+                &:nth-child(even) {
+                    .col {
+                        background-color: rgba(255, 255, 255, 0.4);
+                    }
+                }
+
+                &:nth-child(1) {
+                    .col {
+                        background-color: rgba(255, 255, 255, 0.8);
+                        font-weight: bold;
+                    }
+                }
+            }
+        }
+    </style>
+    <title>成績單</title>
+</head>
+
+<body>
+    <section>
+        <article>
+            <div class="container">
+                <div class="row">
+                    <div class="col">#</div>
+                    <div class="col">Name</div>
+                    <div class="col">costA</div>
+                    <div class="col">costB</div>
+                    <div class="col">costC</div>
+                    <div class="col">costD</div>
+                </div>
+                <div class="row">
+                    <div class="col">1</div>
+                    <div class="col">吳穎伯</div>
+                    <div class="col">90</div>
+                    <div class="col">80</div>
+                    <div class="col">95</div>
+                    <div class="col">90</div>
+                </div>
+                <div class="row">
+                    <div class="col">2</div>
+                    <div class="col">王家佑</div>
+                    <div class="col">95</div>
+                    <div class="col">88</div>
+                    <div class="col">58</div>
+                    <div class="col">93</div>
+                </div>
+                <div class="row">
+                    <div class="col">3</div>
+                    <div class="col">洪奕銘</div>
+                    <div class="col">52</div>
+                    <div class="col">65</div>
+                    <div class="col">76</div>
+                    <div class="col">45</div>
+                </div>
+                <div class="row">
+                    <div class="col">4</div>
+                    <div class="col">許佳伶</div>
+                    <div class="col">88</div>
+                    <div class="col">76</div>
+                    <div class="col">81</div>
+                    <div class="col">60</div>
+                </div>
+                <div class="row">
+                    <div class="col">5</div>
+                    <div class="col">王佩芸</div>
+                    <div class="col">100</div>
+                    <div class="col">100</div>
+                    <div class="col">100</div>
+                    <div class="col">100</div>
+                </div>
+                <div class="row">
+                    <div class="col">6</div>
+                    <div class="col">林奎聖</div>
+                    <div class="col">85</div>
+                    <div class="col">80</div>
+                    <div class="col">89</div>
+                    <div class="col">90</div>
+                </div>
+                <div class="row">
+                    <div class="col">7</div>
+                    <div class="col">張剛皓</div>
+                    <div class="col">35</div>
+                    <div class="col">28</div>
+                    <div class="col">60</div>
+                    <div class="col">67</div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const rows = document.querySelectorAll(".container .row");
+
+            // 表頭
+            const header = rows[0];
+
+            const avgHeader = document.createElement("div");
+            avgHeader.className = "col";
+            avgHeader.textContent = "平均分數";
+
+            const rankHeader = document.createElement("div");
+            rankHeader.className = "col";
+            rankHeader.textContent = "排名";
+
+            header.appendChild(avgHeader);
+            header.appendChild(rankHeader);
+
+            let students = [];
+
+            // 計算分數
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const cols = row.querySelectorAll(".col");
+
+                let scores = [];
+
+                // costA ~ costD
+                for (let j = 2; j <= 5; j++) {
+                    const score = Number(cols[j].textContent);
+                    scores.push(score);
+
+                    // 不及格的部份加上紅色系的字
+                    if (score < 60) {
+                        cols[j].style.color = "red";
+                        cols[j].style.fontWeight = "bold";
+                    }
+
+                    // 滿分的部份底色加上金黃色
+                    if (score === 100) {
+                        cols[j].style.backgroundColor = "gold";
+                    }
+                }
+
+                //加上平均分數的欄位，及平均分數的內容
+                const avg =
+                    scores.reduce((sum, score) => sum + score, 0) / scores.length;
+
+                students.push({
+                    row,
+                    avg
+                });
+
+                const avgCol = document.createElement("div");
+                avgCol.className = "col";
+                avgCol.textContent = avg.toFixed(1);
+
+                row.appendChild(avgCol);
+            }
+
+            // 加上排名的欄位，及排名的內容
+            const sorted = [...students].sort((a, b) => b.avg - a.avg);
+
+            sorted.forEach((student, index) => {
+                student.rank = index + 1;
+            });
+
+            students.forEach(student => {
+                const rankCol = document.createElement("div");
+                rankCol.className = "col";
+                rankCol.textContent = student.rank;
+
+                student.row.appendChild(rankCol);
+            });
+        });
+    </script>
+
+</body>
+
+</html>
