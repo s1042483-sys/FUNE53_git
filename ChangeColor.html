@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色配件染色測試</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .toolbar {
+            margin-bottom: 15px;
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="toolbar">
+        <input type="color" id="colorPicker" value="#ff0000">
+        <button id="btnColor">套用顏色</button>
+    </div>
+
+    <canvas id="canvas" width="500" height="500"></canvas>
+
+    <script>
+
+        const canvas = document.querySelector("#canvas");
+        const ctx = canvas.getContext("2d");
+
+        const bodyImg = new Image();
+        const maskImg = new Image();
+        const lineImg = new Image();
+
+        // 圖片路徑
+        bodyImg.src = "body.png";
+        maskImg.src = "accessory_mask.png";
+        lineImg.src = "accessory_line.png";
+
+        Promise.all([
+            waitImage(bodyImg),
+            waitImage(maskImg),
+            waitImage(lineImg)
+        ]).then(() => {
+
+            // 如果圖片尺寸與 canvas 一樣
+            canvas.width = bodyImg.width;
+            canvas.height = bodyImg.height;
+
+            drawCharacter("#ff0000");
+
+        });
+
+        function waitImage(img) {
+            return new Promise(resolve => {
+                img.onload = resolve;
+            });
+        }
+
+        function drawCharacter(color) {
+
+            ctx.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            // =========================
+            // 第一層：人物底圖
+            // =========================
+            ctx.drawImage(bodyImg, 0, 0);
+
+            // =========================
+            // 第二層：染色後遮罩
+            // =========================
+            const coloredMask = createColoredMask(color);
+
+            ctx.drawImage(
+                coloredMask,
+                0,
+                0
+            );
+
+            // =========================
+            // 第三層：配件線稿
+            // =========================
+            ctx.drawImage(
+                lineImg,
+                0,
+                0
+            );
+        }
+
+        function createColoredMask(color) {
+
+            const tempCanvas =
+                document.createElement("canvas");
+
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+
+            const tempCtx =
+                tempCanvas.getContext("2d");
+
+            // 畫遮罩
+            tempCtx.drawImage(
+                maskImg,
+                0,
+                0
+            );
+
+            // 只保留遮罩範圍
+            tempCtx.globalCompositeOperation =
+                "source-in";
+
+            // 填滿指定顏色
+            tempCtx.fillStyle = color;
+
+            tempCtx.fillRect(
+                0,
+                0,
+                tempCanvas.width,
+                tempCanvas.height
+            );
+
+            return tempCanvas;
+        }
+
+        document
+            .querySelector("#btnColor")
+            .addEventListener("click", () => {
+
+                const color =
+                    document.querySelector("#colorPicker").value;
+
+                drawCharacter(color);
+
+            });
+
+    </script>
+
+</body>
+
+</html>
